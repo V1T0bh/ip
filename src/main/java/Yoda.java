@@ -7,7 +7,13 @@ public class Yoda {
     }
 
     public static void ask() {
-        return;
+        final Scanner SCANNER = new Scanner(System.in);
+        System.out.println("What help shall I do you for?");
+        String userInput =  SCANNER.nextLine();
+        while (!userInput.equals("bye")) {
+            System.out.println(userInput);
+            userInput = SCANNER.nextLine();
+        }
     }
 
     // main function that runs all other sub-functions
