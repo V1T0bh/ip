@@ -1,7 +1,18 @@
+// follows coding standards CHECKED
 import java.util.Scanner;
 
 public class Yoda {
+    public enum TaskType {
+        TODO, DEADLINE, EVENT
+    }
+
+    /*
+        Task class
+        Attributes: type, label, isDone
+        methods: print, mark, unmark
+     */
     public static class Task {
+        public TaskType type = TaskType.TODO;
         public String label = "";
         public boolean isDone = false;
 
@@ -10,7 +21,7 @@ public class Yoda {
         }
 
         public void setLabel(String inputLabel) {
-            label = inputLabel;
+            this.label = inputLabel;
         }
 
         public void print() {
@@ -19,18 +30,29 @@ public class Yoda {
             System.out.println(label);
         }
 
-        public void mark() {
-            isDone = true;
-            System.out.println("Affirmative! Marked have been the task:");
-            print();
-        }
-
-        public void unmark() {
-            isDone = false;
-            System.out.println("Oh no, I shall unmark thy task:");
+        public void setMark(boolean inputMark){
+            this.isDone = inputMark;
+            if (inputMark) {
+                System.out.println("Affirmative! Marked have been the task:");
+            } else {
+                System.out.println("Oh no, I shall unmark thy task:");
+            }
             print();
         }
     }
+
+
+//    public static class Todo extends Task {
+//
+//    }
+//
+//    public static class Deadline extends Task {
+//
+//    }
+//
+//    public static class Event extends Task {
+//
+//    }
 
     // function to output a greeting
     public static void greet() {
@@ -64,14 +86,14 @@ public class Yoda {
                 if (itemId < 0 & itemId >= count){
                     System.out.println("Funny. This ID matches no task of yours.");
                 } else {
-                    inputList[itemId].mark();
+                    inputList[itemId].setMark(true);
                 }
             } else if (userInput.split(" ")[0].equals("unmark")) {
                 int itemId = Integer.parseInt(userInput.split(" ")[1]) - 1;
                 if (itemId < 0 & itemId >= count){
                     System.out.println("Funny. This ID matches no task of yours.");
                 } else {
-                    inputList[itemId].unmark();
+                    inputList[itemId].setMark(false);
                 }
             } else {
                 System.out.print("added: ");
