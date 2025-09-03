@@ -2,6 +2,10 @@
 import java.util.Scanner;
 
 public class Yoda {
+    // CONSTANTS
+    static final Scanner SCANNER = new Scanner(System.in); //  used for user input
+    static final int MAX_TASKS = 100; // max no. of tasks
+
     public enum TaskType {
         TODO, DEADLINE, EVENT
     }
@@ -61,46 +65,51 @@ public class Yoda {
 
     // function to ask the user for an input
     public static void ask() {
+
         // Initialize input variable, empty task list and item count
-        final Scanner SCANNER = new Scanner(System.in);
-        Task[] inputList = new Task[100];
+        Task[] inputList = new Task[MAX_TASKS];
         int count = 0;
 
-        System.out.println("What help shall I do you for?");
+
 
         /* if "bye", loop terminates
          * if "list", shows previous inputs as a numbered list
          * otherwise, adds to a list */
+        System.out.print("Yoda. Do or do not what shall I help you with? > ");
         String userInput =  SCANNER.nextLine();
         while (!userInput.equals("bye")) {
-            if (userInput.equals("list")) {
-                if (count == 0) {
-                    System.out.println("This list of yours looks empty...");
-                }
-                for (int i = 0; i < count; i++) {
-                    System.out.print((i+1) + ". ");
-                    inputList[i].print();
-                }
-            } else if (userInput.split(" ")[0].equals("mark")) {
-                int itemId = Integer.parseInt(userInput.split(" ")[1]) - 1;
-                if (itemId < 0 & itemId >= count){
-                    System.out.println("Funny. This ID matches no task of yours.");
-                } else {
-                    inputList[itemId].setMark(true);
-                }
-            } else if (userInput.split(" ")[0].equals("unmark")) {
-                int itemId = Integer.parseInt(userInput.split(" ")[1]) - 1;
-                if (itemId < 0 & itemId >= count){
-                    System.out.println("Funny. This ID matches no task of yours.");
-                } else {
-                    inputList[itemId].setMark(false);
-                }
-            } else {
-                System.out.print("added: ");
-                System.out.println(userInput);
-                inputList[count] = new Task(userInput);
-                count += 1;
+            String firstWord = userInput.split(" ")[0];
+            switch (firstWord){
+                case "list":
+                    if (count == 0) {
+                        System.out.println("This list of yours looks empty...");
+                    }
+                    for (int i = 0; i < count; i++) {
+                        System.out.print((i+1) + ". ");
+                        inputList[i].print();
+                    }
+                    break;
+                case "mark":
+                case "unmark":
+                    int itemId = Integer.parseInt(userInput.split(" ")[1]) - 1;
+                    if (itemId < 0 & itemId >= count){
+                        System.out.println("Funny. This ID matches no task of yours.");
+                    } else {
+                        inputList[itemId].setMark(firstWord.equals("mark"));
+                    }
+                    break;
+                default:
+                    if (count >= MAX_TASKS){
+                        System.out.println("My condolences, it seems you have too much on your plate.");
+                        System.out.println("Your task was not added.");
+                    } else {
+                        System.out.print("added: ");
+                        System.out.println(userInput);
+                        inputList[count] = new Task(userInput);
+                        count += 1;
+                    }
             }
+            System.out.print("Yoda. Do or do not what shall I help you with? > ");
             userInput = SCANNER.nextLine();
         }
     }
