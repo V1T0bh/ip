@@ -94,7 +94,7 @@ public class Yoda {
 
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
-    public static String[] processInput(String userInput){
+    public static String[] splitInput(String userInput){
         String[] finalArray = {"","","",""};
         String[] splitArray = userInput.split(" ");
 
@@ -109,10 +109,13 @@ public class Yoda {
         int i = 1;
         for (int j = 1; j < 4; j ++) {
             boolean hasExceedLength = i >= splitArray.length;
-            boolean wordContainsSlash = splitArray[i].contains("/");
+            boolean wordContainsSlash = (!hasExceedLength) ? splitArray[i].contains("/") : true;
             while (!(hasExceedLength || wordContainsSlash)) {
                 finalArray[j] += splitArray[i] + " ";
                 i += 1;
+
+                hasExceedLength = i >= splitArray.length;
+                wordContainsSlash = (!hasExceedLength) ? splitArray[i].contains("/") : true;
             }
             finalArray[j] = finalArray[j].strip();
 
@@ -190,7 +193,8 @@ public class Yoda {
         System.out.print("Yoda. Do or do not what shall I help you with? > ");
         String userInput =  SCANNER.nextLine();
         while (!userInput.equals("bye")) {
-            String[] keywordsArray = processInput(userInput);
+            String[] keywordsArray = splitInput(userInput);
+
             switch (keywordsArray[0]){
                 case "list":
                     printTaskList(inputList, count);
@@ -209,6 +213,7 @@ public class Yoda {
                 default:
                     System.out.println("Your instruction is invalid.");
             }
+
             System.out.print("Yoda. Do or do not what shall I help you with? > ");
             userInput = SCANNER.nextLine();
         }
