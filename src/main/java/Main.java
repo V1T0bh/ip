@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Yoda {
+public class Main {
     // CONSTANTS
     static final Scanner SCANNER = new Scanner(System.in); //  used for user input
     static final int MAX_TASKS = 100; // max no. of tasks
