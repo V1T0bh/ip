@@ -68,11 +68,11 @@ public class Main {
     // prints either a success or error message
     // returns the new value of count
     public static int addTaskList(Task[] taskList, String[] keywordsArray, int count) {
-        if (count >= MAX_TASKS) {
-            System.out.println("My condolences, it seems you have too much on your plate.");
-            System.out.println("Your task was not added.");
-        } else {
+        try {
             Task newTask = new Task();
+            if (keywordsArray[1].isEmpty()) {
+                throw new IllegalArgumentException("todo");
+            }
             switch (keywordsArray[0]) {
                 case "todo":
                     newTask = new Todo(keywordsArray[1]);
@@ -88,6 +88,14 @@ public class Main {
             System.out.println("Successfully added: ");
             System.out.println(taskList[count]);
             count += 1;
+        } catch (IllegalArgumentException e) {
+            System.out.print("SHEESHHH!! ");
+            System.out.print(e.getMessage());
+            System.out.println(" has not enough arguments!");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("My condolences, it seems you have too much on your plate.");
+        } finally {
+            System.out.println("Your task was not added.");
         }
         return count;
     }
