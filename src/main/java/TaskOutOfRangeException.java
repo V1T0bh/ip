@@ -1,2 +1,2 @@
-public class TaskOutOfRangeException {
+public class TaskOutOfRangeException extends YodaException {
 }

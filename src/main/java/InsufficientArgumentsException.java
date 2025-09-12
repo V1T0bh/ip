@@ -1,5 +1,2 @@
-public class InsufficientArgumentsException extends RuntimeException {
-    public InsufficientArgumentsException(String message) {
-        super(message);
-    }
+public class InsufficientArgumentsException extends YodaException {
 }

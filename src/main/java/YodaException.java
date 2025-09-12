@@ -1,2 +1,2 @@
-public class InvalidInputException extends Exception {
+public class YodaException extends Exception {
 }
