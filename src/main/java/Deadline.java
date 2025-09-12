@@ -1,8 +1,13 @@
+import javax.naming.InsufficientResourcesException;
+
 public class Deadline extends Todo {
     protected String end;
 
-    public Deadline(String inputLabel, String inputEnd) {
+    public Deadline(String inputLabel, String inputEnd) throws InsufficientResourcesException {
         super(inputLabel);
+        if (inputEnd.isEmpty()) {
+            throw new InsufficientResourcesException();
+        }
         this.end = inputEnd;
     }
 

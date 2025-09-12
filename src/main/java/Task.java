@@ -1,3 +1,5 @@
+import javax.naming.InsufficientResourcesException;
+
 /*
         Task class
         Attributes: label, isDone
@@ -11,7 +13,10 @@ public class Task {
         setLabel("");
     }
 
-    public Task(String inputLabel) {
+    public Task(String inputLabel) throws InsufficientResourcesException {
+        if (inputLabel.isEmpty()) {
+            throw new InsufficientResourcesException();
+        }
         setLabel(inputLabel);
     }
 
