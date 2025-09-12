@@ -1,3 +1,4 @@
+import javax.naming.InsufficientResourcesException;
 import java.util.Scanner;
 
 public class Main {
@@ -71,7 +72,7 @@ public class Main {
         try {
             Task newTask = new Task();
             if (keywordsArray[1].isEmpty()) {
-                throw new IllegalArgumentException("todo");
+                throw new InsufficientResourcesException();
             }
             switch (keywordsArray[0]) {
                 case "todo":
@@ -88,14 +89,12 @@ public class Main {
             System.out.println("Successfully added: ");
             System.out.println(taskList[count]);
             count += 1;
-        } catch (IllegalArgumentException e) {
+        } catch (InsufficientResourcesException e) {
             System.out.print("SHEESHHH!! ");
-            System.out.print(e.getMessage());
-            System.out.println(" has not enough arguments!");
+            System.out.println("Your command has not enough arguments!");
+            System.out.println("Your task was not added.");
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("My condolences, it seems you have too much on your plate.");
-        } finally {
-            System.out.println("Your task was not added.");
         }
         return count;
     }
@@ -122,9 +121,19 @@ public class Main {
                     break;
                 case "mark":
                 case "unmark":
-                    int itemId = Integer.parseInt(keywordsArray[1]) - 1;
-                    boolean isMark = keywordsArray[0].equals("mark");
-                    markTaskList(inputList, count, itemId, isMark);
+                    try {
+                        int itemId = Integer.parseInt(keywordsArray[1]) - 1;
+                        if (itemId >= count) {
+                            throw new TaskOutOfRangeException();
+                        }
+                        boolean isMark = keywordsArray[0].equals("mark");
+                        markTaskList(inputList, count, itemId, isMark);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input is invalid! Try to mark/unmark again.");
+                    } catch (TaskOutOfRangeException e) {
+                        System.out.println("Task is out of range!");
+                        System.out.println("You have " + count + " tasks.");
+                    }
                     break;
                 case "todo":
                 case "deadline":
