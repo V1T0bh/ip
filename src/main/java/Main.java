@@ -45,12 +45,12 @@ public class Main {
     // function that takes in a task list and count
     // prints out the list (if not empty)
     // prints out a message (if empty)
-    public static void printTaskList(ArrayList<Task> taskList, int count) {
-        if (count == 0) {
+    public static void printTaskList(ArrayList<Task> taskList) {
+        if (taskList.size() == 0) {
             System.out.println("This list of yours looks empty...");
         } else {
-            System.out.println("You have " + count + " tasks:");
-            for (int i = 0; i < count; i++) {
+            System.out.println("You have " + taskList.size() + " tasks:");
+            for (int i = 0; i < taskList.size(); i++) {
                 System.out.print((i + 1) + ". ");
                 System.out.println(taskList.get(i));
             }
@@ -59,8 +59,8 @@ public class Main {
 
     // function that marks a task in a task list, depending on index
     // prints a success message if task is found
-    public static void markTaskList(ArrayList<Task> taskList, int count, int index, boolean isMark) {
-        if (index < 0 & index >= count) {
+    public static void markTaskList(ArrayList<Task> taskList, int index, boolean isMark) {
+        if (index < 0 | index >= taskList.size()) {
             System.out.println("Funny. This ID matches no task of yours.");
         } else {
             Task newTask = taskList.get(index);
@@ -72,7 +72,7 @@ public class Main {
     // function that adds a task to a task list
     // prints either a success or error message
     // returns the new value of count
-    public static int addTaskList(ArrayList<Task> taskList, String[] keywordsArray, int count) {
+    public static void addTaskList(ArrayList<Task> taskList, String[] keywordsArray) {
         try {
             Task newTask = new Task();
             if (keywordsArray[1].isEmpty()) {
@@ -91,8 +91,7 @@ public class Main {
             }
             taskList.add(newTask);
             System.out.println("Successfully added: ");
-            System.out.println(taskList.get(count));
-            count += 1;
+            System.out.println(taskList.get(taskList.size()));
         } catch (InsufficientResourcesException e) {
             System.out.print("SHEESHHH!! ");
             System.out.println("Your command has not enough arguments!");
@@ -100,7 +99,6 @@ public class Main {
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("My condolences, it seems you have too much on your plate.");
         }
-        return count;
     }
 
     public static void deleteTaskList(ArrayList<Task> taskList, int index) throws TaskOutOfRangeException {
@@ -113,9 +111,6 @@ public class Main {
 
     // function to ask the user for an input
     public static void ask() {
-        // Initialize input variable, empty task list and item count
-        int count = 0;
-
         /* if "bye", loop terminates
          * if "list", shows previous inputs as a numbered list
          * if "mark"/"unmark", mark/unmark task accordingly
@@ -129,28 +124,28 @@ public class Main {
 
             switch (keywordsArray[0]) {
                 case "list":
-                    printTaskList(inputList, count);
+                    printTaskList(inputList);
                     break;
                 case "mark":
                 case "unmark":
                     try {
                         int itemId = Integer.parseInt(keywordsArray[1]) - 1;
-                        if (itemId >= count) {
+                        if (itemId >= inputList.size()) {
                             throw new TaskOutOfRangeException();
                         }
                         boolean isMark = keywordsArray[0].equals("mark");
-                        markTaskList(inputList, count, itemId, isMark);
+                        markTaskList(inputList, itemId, isMark);
                     } catch (NumberFormatException e) {
                         System.out.println("Input is invalid! Try to mark/unmark again.");
                     } catch (TaskOutOfRangeException e) {
                         System.out.println("Task is out of range!");
-                        System.out.println("You have " + count + " tasks.");
+                        System.out.println("You have " + inputList.size() + " tasks.");
                     }
                     break;
                 case "todo":
                 case "deadline":
                 case "event":
-                    count = addTaskList(inputList, keywordsArray, count);
+                    addTaskList(inputList, keywordsArray);
                     break;
                 case "delete":
                     try {
@@ -164,7 +159,6 @@ public class Main {
 
                         if (userInput.equals("Y")) {
                             deleteTaskList(inputList, itemId);
-                            count -= 1;
                             System.out.println("Successfully deleted!");
                         } else {
                             System.out.println("Delete command aborted...");
@@ -174,7 +168,7 @@ public class Main {
                         System.out.println("Input is invalid! Try to delete again.");
                     } catch (TaskOutOfRangeException | IndexOutOfBoundsException e) {
                         System.out.println("Task is out of range!");
-                        System.out.println("You have " + count + " tasks.");
+                        System.out.println("You have " + inputList.size() + " tasks.");
                     }
                     break;
                 default:
