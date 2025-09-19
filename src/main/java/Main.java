@@ -1,10 +1,12 @@
 import javax.naming.InsufficientResourcesException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
     // CONSTANTS
     static final Scanner SCANNER = new Scanner(System.in); //  used for user input
     static final int MAX_TASKS = 100; // max no. of tasks
+    static ArrayList<Task> inputList = new ArrayList<>();
 
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
@@ -43,32 +45,34 @@ public class Main {
     // function that takes in a task list and count
     // prints out the list (if not empty)
     // prints out a message (if empty)
-    public static void printTaskList(Task[] taskList, int count) {
+    public static void printTaskList(ArrayList<Task> taskList, int count) {
         if (count == 0) {
             System.out.println("This list of yours looks empty...");
         } else {
             System.out.println("You have " + count + " tasks:");
             for (int i = 0; i < count; i++) {
                 System.out.print((i + 1) + ". ");
-                System.out.println(taskList[i]);
+                System.out.println(taskList.get(i));
             }
         }
     }
 
     // function that marks a task in a task list, depending on index
     // prints a success message if task is found
-    public static void markTaskList(Task[] taskList, int count, int index, boolean isMark) {
+    public static void markTaskList(ArrayList<Task> taskList, int count, int index, boolean isMark) {
         if (index < 0 & index >= count) {
             System.out.println("Funny. This ID matches no task of yours.");
         } else {
-            taskList[index].setMark(isMark);
+            Task newTask = taskList.get(index);
+            newTask.setMark(isMark);
+            taskList.set(index, newTask);
         }
     }
 
     // function that adds a task to a task list
     // prints either a success or error message
     // returns the new value of count
-    public static int addTaskList(Task[] taskList, String[] keywordsArray, int count) {
+    public static int addTaskList(ArrayList<Task> taskList, String[] keywordsArray, int count) {
         try {
             Task newTask = new Task();
             if (keywordsArray[1].isEmpty()) {
@@ -85,9 +89,9 @@ public class Main {
                     newTask = new Event(keywordsArray[1], keywordsArray[2], keywordsArray[3]);
                     break;
             }
-            taskList[count] = newTask;
+            taskList.add(newTask);
             System.out.println("Successfully added: ");
-            System.out.println(taskList[count]);
+            System.out.println(taskList.get(count));
             count += 1;
         } catch (InsufficientResourcesException e) {
             System.out.print("SHEESHHH!! ");
@@ -102,7 +106,6 @@ public class Main {
     // function to ask the user for an input
     public static void ask() {
         // Initialize input variable, empty task list and item count
-        Task[] inputList = new Task[MAX_TASKS];
         int count = 0;
 
         /* if "bye", loop terminates
