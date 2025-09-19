@@ -103,6 +103,14 @@ public class Main {
         return count;
     }
 
+    public static void deleteTaskList(ArrayList<Task> taskList, int index) throws TaskOutOfRangeException {
+        if (index < 0 || index >= taskList.size()) {
+            throw new TaskOutOfRangeException();
+        } else {
+            taskList.remove(index);
+        }
+    }
+
     // function to ask the user for an input
     public static void ask() {
         // Initialize input variable, empty task list and item count
@@ -112,6 +120,7 @@ public class Main {
          * if "list", shows previous inputs as a numbered list
          * if "mark"/"unmark", mark/unmark task accordingly
          * if "deadline"/"todo"/"event", add task accordingly
+         * if "delete", deletes task accordingly
          */
         System.out.print("Yoda. Do or do not what shall I help you with? > ");
         String userInput = SCANNER.nextLine();
@@ -142,6 +151,31 @@ public class Main {
                 case "deadline":
                 case "event":
                     count = addTaskList(inputList, keywordsArray, count);
+                    break;
+                case "delete":
+                    try {
+                        int itemId = Integer.parseInt(keywordsArray[1]) - 1;
+                        String TaskCache = String.valueOf(inputList.get(itemId));
+                        // confirmation message
+                        System.out.println("This task will be PERMANENTLY deleted:");
+                        System.out.println(TaskCache);
+                        System.out.print("Are you sure? (Y/n) > ");
+                        userInput = SCANNER.nextLine();
+
+                        if (userInput.equals("Y")) {
+                            deleteTaskList(inputList, itemId);
+                            count -= 1;
+                            System.out.println("Successfully deleted!");
+                        } else {
+                            System.out.println("Delete command aborted...");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Input is invalid! Try to delete again.");
+                    } catch (TaskOutOfRangeException | IndexOutOfBoundsException e) {
+                        System.out.println("Task is out of range!");
+                        System.out.println("You have " + count + " tasks.");
+                    }
                     break;
                 default:
                     System.out.println("Your instruction is invalid.");
