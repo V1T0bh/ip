@@ -91,7 +91,7 @@ public class Main {
             }
             taskList.add(newTask);
             System.out.println("Successfully added: ");
-            System.out.println(taskList.get(taskList.size()));
+            System.out.println(taskList.getLast());
         } catch (InsufficientResourcesException e) {
             System.out.print("SHEESHHH!! ");
             System.out.println("Your command has not enough arguments!");
