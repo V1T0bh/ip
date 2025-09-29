@@ -96,6 +96,8 @@ public class Main {
                     newTask = new Event(keywordsArray[1], keywordsArray[2], keywordsArray[3]);
                     lastIndex = 4;
                     break;
+                default:
+                    throw new InvalidCommandException(keywordsArray[0] + " is not a valid command...");
             }
             taskList[count] = newTask;
             if (show) {
@@ -115,6 +117,10 @@ public class Main {
             System.out.println("Your task was not added.");
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("My condolences, it seems you have too much on your plate.");
+        } catch (InvalidCommandException e) {
+            System.out.println("Invalid command found.");
+            System.out.println("Error: " + e);
+            System.out.println("Line skipped.");
         }
         return count;
     }
