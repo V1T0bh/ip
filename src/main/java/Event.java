@@ -15,4 +15,13 @@ public class Event extends Deadline {
     public String toString() {
         return "[E]" + this.taskString() + " (from: " + this.start + " to: " + this.end + ")";
     }
+
+    public String toCommand(){
+        String mark = (isDone) ? "X" : " ";
+        return "event " + label +
+                " /from " + start +
+                " /to " + end +
+                " /mark " + mark;
+
+    }
 }

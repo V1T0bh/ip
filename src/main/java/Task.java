@@ -35,6 +35,13 @@ public class Task {
         return "[" + mark + "] " + label;
     }
 
+    public String toCommand(){
+        String mark = (isDone) ? "X" : " ";
+        return "task " + label +
+                " /mark " + mark;
+
+    }
+
     public void setMark(boolean inputMark) {
         this.isDone = inputMark;
         if (inputMark) {
