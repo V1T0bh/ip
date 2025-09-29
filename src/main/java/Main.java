@@ -1,8 +1,8 @@
 import javax.naming.InsufficientResourcesException;
-import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -11,8 +11,8 @@ public class Main {
     // CONSTANTS
     static final Scanner SCANNER = new Scanner(System.in); //  used for user input
     static final int MAX_TASKS = 100; // max no. of tasks
-    static ArrayList<Task> inputList = new ArrayList<>();
 
+    static ArrayList<Task> inputList = new ArrayList<>();
     private static int tasksArrLength;
 
     // function to split the input to array
@@ -80,10 +80,10 @@ public class Main {
     // function that adds a task to a task list
     // prints either a success or error message
     // returns the new value of count
-    public static void addTaskList(ArrayList<Task> taskList, String[] keywordsArray) {
+    private static void addTaskList(String[] keywordsArray, boolean show) {
         try {
-            int lastIndex = 0;
-            Task newTask = new Task();
+            int lastIndex;
+            Task newTask;
             if (keywordsArray[1].isEmpty()) {
                 throw new InsufficientResourcesException();
             }
@@ -103,9 +103,19 @@ public class Main {
                 default:
                     throw new InvalidCommandException(keywordsArray[0] + " is not a valid command...");
             }
-            taskList.add(newTask);
-            System.out.println("Successfully added: ");
-            System.out.println(taskList.getLast());
+            inputList.add(newTask);
+            if (show) {
+                // expected: entry through user input
+                System.out.println("Successfully added: ");
+                System.out.println(inputList.get(inputList.size() - 1));
+            } else {
+                // expected: entry through file input
+                if (keywordsArray[lastIndex].equals("X")) {
+                    newTask = inputList.get(inputList.size() - 1);
+                    newTask.setMarkSilent(true);
+                    inputList.set(inputList.size()-1, newTask);
+                }
+            }
         } catch (InsufficientResourcesException e) {
             System.out.print("SHEESHHH!! ");
             System.out.println("Your command has not enough arguments!");
@@ -126,17 +136,15 @@ public class Main {
             taskList.remove(index);
         }
     }
-
     // function to ask the user for an input
-    private static Task[] ask(Task[] inputList) {
+    // modifies contents of Task list depending on user input
+    private static void ask() {
         /* if "bye", loop terminates
          * if "list", shows previous inputs as a numbered list
          * if "mark"/"unmark", mark/unmark task accordingly
          * if "deadline"/"todo"/"event", add task accordingly
          * if "delete", deletes task accordingly
          */
-        int count = tasksArrLength;
-
         System.out.print("Yoda. Do or do not what shall I help you with? > ");
         String userInput = SCANNER.nextLine();
         while (!userInput.equals("bye")) {
@@ -165,7 +173,7 @@ public class Main {
                 case "todo":
                 case "deadline":
                 case "event":
-                    addTaskList(inputList, keywordsArray, true);
+                    addTaskList(keywordsArray, true);
                     break;
                 case "delete":
                     try {
@@ -199,32 +207,27 @@ public class Main {
             userInput = SCANNER.nextLine();
         }
 
-        tasksArrLength = count;
-        return inputList;
     }
 
     // function extracts and processes all tasks to tasks array from file f
     // returns a Task[] array, filled with extracted tasks
-    private static Task[] fileToArray(File f) throws FileNotFoundException {
-        Task[] tempArray = new Task[MAX_TASKS];
+    private static void fileToArray(File f) throws FileNotFoundException {
         Scanner fileScanner = new Scanner(f);
 
         while (fileScanner.hasNext()) {
             String fileInput = fileScanner.nextLine();
             String[] keywordsArray = splitInput(fileInput);
 
-            tasksArrLength = addTaskList(tempArray, keywordsArray, tasksArrLength, false);
+            addTaskList(keywordsArray, false);
         }
-
-        return tempArray;
     }
 
-    // function takes a tasks array and writes it to file f
-    private static void arrayToFile(Task[] tasksArr, File f) throws IOException {
+    // function uses task array and writes it to file f
+    private static void arrayToFile(File f) throws IOException {
         FileWriter fWrite = new FileWriter(f);
 
-        for (int i = 0; i < tasksArrLength; i++) {
-            fWrite.write(tasksArr[i].toCommand());
+        for (int i = 0; i < inputList.size(); i++) {
+            fWrite.write(inputList.get(i).toCommand());
             fWrite.write("\n");
         }
         fWrite.close();
@@ -232,12 +235,11 @@ public class Main {
 
 
     // main function that runs all other sub-functions
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             System.out.println("------------- YODA AWAKENS -------------");
 
 
-            Task[] tasksArrayFromFile;
 
             // creates dir "data/" if it does not exist
             // does nothing if it exists
@@ -249,14 +251,13 @@ public class Main {
 
             if (userFile.createNewFile()) {
                 System.out.println("Greetings youngling, Yoda is my name");
-                tasksArrayFromFile = new Task[MAX_TASKS];
             } else {
                 System.out.println("Welcome back youngling! It is a pleasure to see you again");
-                tasksArrayFromFile = fileToArray(userFile);
+                fileToArray(userFile);
             }
 
-            Task[] newtasksArray = ask(tasksArrayFromFile);
-            arrayToFile(tasksArrayFromFile, userFile);
+            ask();
+            arrayToFile(userFile);
 
             System.out.print("\n");
             System.out.println("Do or do not, I shall say goodbye.");
@@ -264,11 +265,11 @@ public class Main {
         } catch (IOException e) {
             System.out.println("There were issues with the file.");
             System.out.print("ERROR MESSAGE: ");
-            System.out.println(e);
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println("Something went wrong!");
             System.out.print("ERROR MESSAGE: ");
-            System.out.println(e);
+            System.out.println(e.getMessage() );
         }
     }
 }
