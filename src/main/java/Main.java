@@ -78,8 +78,8 @@ public class Main {
     // returns the new value of count
     private static int addTaskList(Task[] taskList, String[] keywordsArray, int count, boolean show) {
         try {
-            int lastIndex = 0;
-            Task newTask = new Task();
+            int lastIndex;
+            Task newTask;
             if (keywordsArray[1].isEmpty()) {
                 throw new InsufficientResourcesException();
             }
@@ -205,7 +205,7 @@ public class Main {
 
 
     // main function that runs all other sub-functions
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             System.out.println("------------- YODA AWAKENS -------------");
 
@@ -229,7 +229,7 @@ public class Main {
             }
 
             Task[] newtasksArray = ask(tasksArrayFromFile);
-            arrayToFile(tasksArrayFromFile, userFile);
+            arrayToFile(newtasksArray, userFile);
 
             System.out.print("\n");
             System.out.println("Do or do not, I shall say goodbye.");
@@ -237,11 +237,11 @@ public class Main {
         } catch (IOException e) {
             System.out.println("There were issues with the file.");
             System.out.print("ERROR MESSAGE: ");
-            System.out.println(e);
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             System.out.println("Something went wrong!");
             System.out.print("ERROR MESSAGE: ");
-            System.out.println(e);
+            System.out.println(e.getMessage() );
         }
     }
 }
