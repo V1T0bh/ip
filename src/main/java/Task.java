@@ -44,4 +44,8 @@ public class Task {
         }
         System.out.println(this);
     }
+
+    public void setMarkSilent(boolean inputMark) {
+        this.isDone = inputMark;
+    }
 }
