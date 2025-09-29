@@ -166,6 +166,7 @@ public class Main {
             userInput = SCANNER.nextLine();
         }
 
+        tasksArrLength = count;
         return inputList;
     }
 
@@ -187,15 +188,13 @@ public class Main {
 
     // function takes a tasks array and writes it to file f
     private static void arrayToFile(Task[] tasksArr, File f) throws IOException {
-        /*FileWriter fWrite = new FileWriter(f);
+        FileWriter fWrite = new FileWriter(f);
 
-
-
-        //fWrite.write("Files in Java might be tricky, but it is fun enough!");
-        fWrite.close();  // must close manually
-        System.out.println("Successfully wrote to the file.");*/
-
-        System.out.println("<Array converted to file. Success!>");
+        for (int i = 0; i < tasksArrLength; i++) {
+            fWrite.write(tasksArr[i].toCommand());
+            fWrite.write("\n");
+        }
+        fWrite.close();
     }
 
 
