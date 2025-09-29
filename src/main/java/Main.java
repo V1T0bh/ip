@@ -1,5 +1,8 @@
 import javax.naming.InsufficientResourcesException;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Main {
     // CONSTANTS
@@ -8,7 +11,7 @@ public class Main {
 
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
-    public static String[] splitInput(String userInput) {
+    private static String[] splitInput(String userInput) {
         String[] finalArray = {"", "", "", ""};
         String[] splitArray = userInput.split(" ");
 
@@ -43,7 +46,7 @@ public class Main {
     // function that takes in a task list and count
     // prints out the list (if not empty)
     // prints out a message (if empty)
-    public static void printTaskList(Task[] taskList, int count) {
+    private static void printTaskList(Task[] taskList, int count) {
         if (count == 0) {
             System.out.println("This list of yours looks empty...");
         } else {
@@ -57,7 +60,7 @@ public class Main {
 
     // function that marks a task in a task list, depending on index
     // prints a success message if task is found
-    public static void markTaskList(Task[] taskList, int count, int index, boolean isMark) {
+    private static void markTaskList(Task[] taskList, int count, int index, boolean isMark) {
         if (index < 0 & index >= count) {
             System.out.println("Funny. This ID matches no task of yours.");
         } else {
@@ -68,7 +71,7 @@ public class Main {
     // function that adds a task to a task list
     // prints either a success or error message
     // returns the new value of count
-    public static int addTaskList(Task[] taskList, String[] keywordsArray, int count) {
+    private static int addTaskList(Task[] taskList, String[] keywordsArray, int count) {
         try {
             Task newTask = new Task();
             if (keywordsArray[1].isEmpty()) {
@@ -100,11 +103,7 @@ public class Main {
     }
 
     // function to ask the user for an input
-    public static void ask() {
-        // Initialize input variable, empty task list and item count
-        Task[] inputList = new Task[MAX_TASKS];
-        int count = 0;
-
+    private static Task[] ask(Task[] inputList, int count) {
         /* if "bye", loop terminates
          * if "list", shows previous inputs as a numbered list
          * if "mark"/"unmark", mark/unmark task accordingly
@@ -147,13 +146,40 @@ public class Main {
             System.out.print("Yoda. Do or do not what shall I help you with? > ");
             userInput = SCANNER.nextLine();
         }
+
+        return inputList;
     }
+
+    private static Task[] file_to_array(File f){
+        Task[] tempArray = new Task[MAX_TASKS];
+
+        return tempArray;
+    }
+
+    private static void array_to_file(Task[] tasksArr){
+        System.out.println("<Array converted to file. Success!>");
+    }
+
 
     // main function that runs all other sub-functions
     public static void main(String[] args) {
+        Task[] tasksArrayFromFile;
+        int tasksArrLength = 0;
+
+        File userFile = new File("data/user.txt");
+        if (userFile.exists()) {
+            System.out.println("<File found. File read.>");
+            tasksArrayFromFile = file_to_array(userFile);
+        } else {
+            System.out.println("<File not found. File created>"); // create file
+            tasksArrayFromFile = new Task[MAX_TASKS];
+        }
+
         System.out.println("------------- YODA AWAKENS -------------");
         System.out.println("Greetings youngling, Yoda is my name");
-        ask();
+
+        Task[] newtasksArray = ask(tasksArrayFromFile, tasksArrLength);
+        array_to_file(tasksArrayFromFile);
 
         System.out.print("\n");
         System.out.println("Do or do not, I shall say goodbye.");
