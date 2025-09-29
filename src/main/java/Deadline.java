@@ -16,4 +16,12 @@ public class Deadline extends Todo {
         return "[D]" + this.taskString() + " (by: " + this.end + ")";
     }
 
+    public String toCommand(){
+        String mark = (isDone) ? "X" : " ";
+        return "deadline " + label +
+                " /by " + end +
+                "  /mark " + mark;
+
+    }
+
 }

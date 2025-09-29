@@ -35,6 +35,13 @@ public class Task {
         return "[" + mark + "] " + label;
     }
 
+    public String toCommand(){
+        String mark = (isDone) ? "X" : " ";
+        return "task " + label +
+                " /mark " + mark;
+
+    }
+
     public void setMark(boolean inputMark) {
         this.isDone = inputMark;
         if (inputMark) {
@@ -43,5 +50,9 @@ public class Task {
             System.out.println("Oh no, I shall unmark thy task:");
         }
         System.out.println(this);
+    }
+
+    public void setMarkSilent(boolean inputMark) {
+        this.isDone = inputMark;
     }
 }

@@ -1,6 +1,11 @@
 import javax.naming.InsufficientResourcesException;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 
 public class Main {
     // CONSTANTS
@@ -8,10 +13,13 @@ public class Main {
     static final int MAX_TASKS = 100; // max no. of tasks
     static ArrayList<Task> inputList = new ArrayList<>();
 
+    private static int tasksArrLength;
+
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
-    public static String[] splitInput(String userInput) {
-        String[] finalArray = {"", "", "", ""};
+    private static String[] splitInput(String userInput) {
+        final int NO_OF_KEYWORDS = 5;
+        String[] finalArray = {"", "", "", "", ""};
         String[] splitArray = userInput.split(" ");
 
         // TYPE is first word
@@ -23,7 +31,7 @@ public class Main {
 
         // LABEL, START, END
         int i = 1;
-        for (int j = 1; j < 4; j++) {
+        for (int j = 1; j < NO_OF_KEYWORDS; j++) {
             boolean hasExceedLength = i >= splitArray.length;
             boolean wordContainsSlash = hasExceedLength || splitArray[i].contains("/");
             while (!(hasExceedLength || wordContainsSlash)) {
@@ -74,6 +82,7 @@ public class Main {
     // returns the new value of count
     public static void addTaskList(ArrayList<Task> taskList, String[] keywordsArray) {
         try {
+            int lastIndex = 0;
             Task newTask = new Task();
             if (keywordsArray[1].isEmpty()) {
                 throw new InsufficientResourcesException();
@@ -81,13 +90,18 @@ public class Main {
             switch (keywordsArray[0]) {
                 case "todo":
                     newTask = new Todo(keywordsArray[1]);
+                    lastIndex = 2;
                     break;
                 case "deadline":
                     newTask = new Deadline(keywordsArray[1], keywordsArray[2]);
+                    lastIndex = 3;
                     break;
                 case "event":
                     newTask = new Event(keywordsArray[1], keywordsArray[2], keywordsArray[3]);
+                    lastIndex = 4;
                     break;
+                default:
+                    throw new InvalidCommandException(keywordsArray[0] + " is not a valid command...");
             }
             taskList.add(newTask);
             System.out.println("Successfully added: ");
@@ -98,6 +112,10 @@ public class Main {
             System.out.println("Your task was not added.");
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("My condolences, it seems you have too much on your plate.");
+        } catch (InvalidCommandException e) {
+            System.out.println("Invalid command found.");
+            System.out.println("Error: " + e);
+            System.out.println("Line skipped.");
         }
     }
 
@@ -110,13 +128,15 @@ public class Main {
     }
 
     // function to ask the user for an input
-    public static void ask() {
+    private static Task[] ask(Task[] inputList) {
         /* if "bye", loop terminates
          * if "list", shows previous inputs as a numbered list
          * if "mark"/"unmark", mark/unmark task accordingly
          * if "deadline"/"todo"/"event", add task accordingly
          * if "delete", deletes task accordingly
          */
+        int count = tasksArrLength;
+
         System.out.print("Yoda. Do or do not what shall I help you with? > ");
         String userInput = SCANNER.nextLine();
         while (!userInput.equals("bye")) {
@@ -145,7 +165,7 @@ public class Main {
                 case "todo":
                 case "deadline":
                 case "event":
-                    addTaskList(inputList, keywordsArray);
+                    addTaskList(inputList, keywordsArray, true);
                     break;
                 case "delete":
                     try {
@@ -178,16 +198,77 @@ public class Main {
             System.out.print("Yoda. Do or do not what shall I help you with? > ");
             userInput = SCANNER.nextLine();
         }
+
+        tasksArrLength = count;
+        return inputList;
     }
 
-    // main function that runs all other sub-functions
-    public static void main(String[] args) {
-        System.out.println("------------- YODA AWAKENS -------------");
-        System.out.println("Greetings youngling, Yoda is my name");
-        ask();
+    // function extracts and processes all tasks to tasks array from file f
+    // returns a Task[] array, filled with extracted tasks
+    private static Task[] fileToArray(File f) throws FileNotFoundException {
+        Task[] tempArray = new Task[MAX_TASKS];
+        Scanner fileScanner = new Scanner(f);
 
-        System.out.print("\n");
-        System.out.println("Do or do not, I shall say goodbye.");
-        System.out.println("------------- PROGRAM TERMINATED -------------");
+        while (fileScanner.hasNext()) {
+            String fileInput = fileScanner.nextLine();
+            String[] keywordsArray = splitInput(fileInput);
+
+            tasksArrLength = addTaskList(tempArray, keywordsArray, tasksArrLength, false);
+        }
+
+        return tempArray;
+    }
+
+    // function takes a tasks array and writes it to file f
+    private static void arrayToFile(Task[] tasksArr, File f) throws IOException {
+        FileWriter fWrite = new FileWriter(f);
+
+        for (int i = 0; i < tasksArrLength; i++) {
+            fWrite.write(tasksArr[i].toCommand());
+            fWrite.write("\n");
+        }
+        fWrite.close();
+    }
+
+
+    // main function that runs all other sub-functions
+    public static void main(String[] args) throws IOException {
+        try {
+            System.out.println("------------- YODA AWAKENS -------------");
+
+
+            Task[] tasksArrayFromFile;
+
+            // creates dir "data/" if it does not exist
+            // does nothing if it exists
+            Path dir  = Paths.get("data");
+            Files.createDirectories(dir);
+
+            File userFile = new File("data/user.txt");
+            tasksArrLength = 0;
+
+            if (userFile.createNewFile()) {
+                System.out.println("Greetings youngling, Yoda is my name");
+                tasksArrayFromFile = new Task[MAX_TASKS];
+            } else {
+                System.out.println("Welcome back youngling! It is a pleasure to see you again");
+                tasksArrayFromFile = fileToArray(userFile);
+            }
+
+            Task[] newtasksArray = ask(tasksArrayFromFile);
+            arrayToFile(tasksArrayFromFile, userFile);
+
+            System.out.print("\n");
+            System.out.println("Do or do not, I shall say goodbye.");
+            System.out.println("------------- PROGRAM TERMINATED -------------");
+        } catch (IOException e) {
+            System.out.println("There were issues with the file.");
+            System.out.print("ERROR MESSAGE: ");
+            System.out.println(e);
+        } catch (Exception e) {
+            System.out.println("Something went wrong!");
+            System.out.print("ERROR MESSAGE: ");
+            System.out.println(e);
+        }
     }
 }
