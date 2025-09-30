@@ -1,7 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.util.Scanner;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -84,54 +81,23 @@ public class Yoda {
 
     }
 
-    // function extracts and processes all tasks to tasks array from file f
-    // returns a Task[] array, filled with extracted tasks
-    private static void fileToArray(File f) throws FileNotFoundException {
-        Scanner fileScanner = new Scanner(f);
-
-        while (fileScanner.hasNext()) {
-            String fileInput = fileScanner.nextLine();
-            String[] keywordsArray = Parser.split(fileInput);
-
-            inputList.add(keywordsArray, false);
-        }
-    }
-
-    // function uses task array and writes it to file f
-    private static void arrayToFile(File f) throws IOException {
-        FileWriter fWrite = new FileWriter(f);
-
-        for (Task task : inputList.getTasks()) {
-            fWrite.write(task.toCommand());
-            fWrite.write("\n");
-        }
-        fWrite.close();
-    }
-
 
     // main function that runs all other sub-functions
     public static void main(String[] args) {
         try {
             System.out.println("------------- YODA AWAKENS -------------");
 
+            Storage userData = new Storage("data/user.txt");
 
-
-            // creates dir "data/" if it does not exist
-            // does nothing if it exists
-            Path dir  = Paths.get("data");
-            Files.createDirectories(dir);
-
-            File userFile = new File("data/user.txt");
-
-            if (userFile.createNewFile()) {
+            if (userData.isNewFile()){
                 System.out.println("Greetings youngling, Yoda is my name");
             } else {
                 System.out.println("Welcome back youngling! It is a pleasure to see you again");
-                fileToArray(userFile);
+                userData.fileToArray();
             }
 
             ask();
-            arrayToFile(userFile);
+            userData.arrayToFile();
 
             System.out.print("\n");
             System.out.println("Do or do not, I shall say goodbye.");
