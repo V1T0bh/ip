@@ -25,7 +25,7 @@ public class Ui {
      * Prints a horizontal divider line to separate sections of console output.
      */
     public static void divider(){
-        System.out.println("-----------------------------------");
+        System.out.println("----------------------------------------------");
     }
 
     // outputs text when program starts
@@ -35,7 +35,7 @@ public class Ui {
      * @param isNewFile true if this is the first time the data file is created; false otherwise.
      */
     public static void start(boolean isNewFile) {
-        System.out.println("-----------------------------------");
+        divider();
         System.out.println("""
                 ___  _ ____  ____  ____\s
                 \\  \\///  _ \\/  _ \\/  _ \\
@@ -43,7 +43,7 @@ public class Ui {
                  / /  | \\_/|| |_/|| |-||
                 /_/   \\____/\\____/\\_/ \\|
                                        \s""");
-        System.out.println("-------------- AWAKENS -------------");
+        System.out.println("------------------- AWAKENS ------------------");
 
         if (isNewFile){
             System.out.println("Greetings youngling, Yoda is my name");
