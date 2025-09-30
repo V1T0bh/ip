@@ -6,6 +6,7 @@ import yoda.exception.TaskOutOfRangeException;
 import javax.naming.InsufficientResourcesException;
 import java.util.ArrayList;
 
+import static yoda.Yoda.inputList;
 import static yoda.parser.Parser.keywordsList;
 
 public class TaskList {
@@ -123,5 +124,17 @@ public class TaskList {
         }
     }
 
+    // takes String and uses it to filter. Returns list of tasks based on filter string.
+    public static ArrayList<Task> filterTasks(String filter) {
+        ArrayList<Task> filteredList = new ArrayList<>();
+
+        for (Task task : inputList.getTasks()) {
+            if (String.valueOf(task).contains(filter)) {
+                filteredList.add(task);
+            }
+        }
+
+        return filteredList;
+    }
 
 }

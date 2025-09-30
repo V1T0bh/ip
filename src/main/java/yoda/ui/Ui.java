@@ -2,7 +2,9 @@ package yoda.ui;
 
 import yoda.parser.Parser;
 import yoda.exception.TaskOutOfRangeException;
+import yoda.task.Task;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static yoda.Yoda.inputList;
@@ -42,6 +44,7 @@ public class Ui {
     public static void processCommand() throws TaskOutOfRangeException {
         int itemId;
         String userInput;
+        ArrayList<Task> filteredList;
 
         switch (keywordsList.get(0)) {
             case "list":
@@ -75,6 +78,19 @@ public class Ui {
                 } else {
                     System.out.println("Delete command aborted...");
                 }
+                break;
+            case "find":
+                filteredList = inputList.filterTasks(keywordsList.get(1));
+
+                if (filteredList.isEmpty()) {
+                    System.out.println("*cough* All I found was dust. *cough*");
+                } else {
+                    System.out.println("Ahh. I found these in your pocket:");
+                    for (Task task : filteredList) {
+                        System.out.println(task);
+                    }
+                }
+
                 break;
             default:
                 System.out.println("Your instruction is invalid.");
