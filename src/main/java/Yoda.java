@@ -7,13 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 
-public class Main {
+public class Yoda {
     // CONSTANTS
     static final Scanner SCANNER = new Scanner(System.in); //  used for user input
-    static final int MAX_TASKS = 100; // max no. of tasks
 
     static ArrayList<Task> inputList = new ArrayList<>();
-    private static int tasksArrLength;
 
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
@@ -54,7 +52,7 @@ public class Main {
     // prints out the list (if not empty)
     // prints out a message (if empty)
     public static void printTaskList(ArrayList<Task> taskList) {
-        if (taskList.size() == 0) {
+        if (taskList.isEmpty()) {
             System.out.println("This list of yours looks empty...");
         } else {
             System.out.println("You have " + taskList.size() + " tasks:");
@@ -226,8 +224,8 @@ public class Main {
     private static void arrayToFile(File f) throws IOException {
         FileWriter fWrite = new FileWriter(f);
 
-        for (int i = 0; i < inputList.size(); i++) {
-            fWrite.write(inputList.get(i).toCommand());
+        for (Task task : inputList) {
+            fWrite.write(task.toCommand());
             fWrite.write("\n");
         }
         fWrite.close();
@@ -247,7 +245,6 @@ public class Main {
             Files.createDirectories(dir);
 
             File userFile = new File("data/user.txt");
-            tasksArrLength = 0;
 
             if (userFile.createNewFile()) {
                 System.out.println("Greetings youngling, Yoda is my name");
