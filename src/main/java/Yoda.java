@@ -11,41 +11,6 @@ public class Yoda {
 
     static TaskList inputList = new TaskList();
 
-    // function to split the input to array
-    // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
-    private static String[] splitInput(String userInput) {
-        final int NO_OF_KEYWORDS = 5;
-        String[] finalArray = {"", "", "", "", ""};
-        String[] splitArray = userInput.split(" ");
-
-        // TYPE is first word
-        finalArray[0] = splitArray[0];
-
-        if (splitArray.length == 1) {
-            return finalArray;
-        }
-
-        // LABEL, START, END
-        int i = 1;
-        for (int j = 1; j < NO_OF_KEYWORDS; j++) {
-            boolean hasExceedLength = i >= splitArray.length;
-            boolean wordContainsSlash = hasExceedLength || splitArray[i].contains("/");
-            while (!(hasExceedLength || wordContainsSlash)) {
-                finalArray[j] += splitArray[i] + " ";
-                i += 1;
-
-                hasExceedLength = i >= splitArray.length;
-                wordContainsSlash = hasExceedLength || splitArray[i].contains("/");
-            }
-            finalArray[j] = finalArray[j].strip();
-
-            // skips the word containing "/" (e.g. /by)
-            i += 1;
-        }
-
-        return finalArray;
-    }
-
     // function to ask the user for an input
     // modifies contents of Task list depending on user input
     private static void ask() {
@@ -58,7 +23,7 @@ public class Yoda {
         System.out.print("Yoda. Do or do not what shall I help you with? > ");
         String userInput = SCANNER.nextLine();
         while (!userInput.equals("bye")) {
-            String[] keywordsArray = splitInput(userInput);
+            String[] keywordsArray = Parser.split(userInput);
 
             switch (keywordsArray[0]) {
                 case "list":
@@ -126,7 +91,7 @@ public class Yoda {
 
         while (fileScanner.hasNext()) {
             String fileInput = fileScanner.nextLine();
-            String[] keywordsArray = splitInput(fileInput);
+            String[] keywordsArray = Parser.split(fileInput);
 
             inputList.add(keywordsArray, false);
         }
