@@ -2,7 +2,32 @@ package yoda.parser;
 
 import java.util.ArrayList;
 
-// parses command to keywords
+/**
+ * Splits raw user input into structured keywords for command handling.
+ * <p>
+ * The {@code Parser} fills a shared {@link #keywordsList} with up to five fields:
+ * </p>
+ * <ol>
+ *   <li><b>index 0</b> – command type (e.g., {@code todo}, {@code deadline}, {@code event}, {@code mark}, {@code list})</li>
+ *   <li><b>index 1</b> – task label/description</li>
+ *   <li><b>index 2</b> – start value (e.g., {@code /from} for events)</li>
+ *   <li><b>index 3</b> – end value (e.g., {@code /to} or {@code /by})</li>
+ *   <li><b>index 4</b> – Mark flag</li>
+ * </ol>
+ *
+ * <p>
+ * Delimiters such as {@code /by}, {@code /from}, {@code /to}, and {@code /mark} are
+ * used as boundaries for each keyword. Commands are parsed as per these examples:
+ * </p>
+ *
+ * <pre>{@code
+ * "deadline submit report /by Friday /mark X"
+ * // -> ["deadline", "submit report", "", "Friday", "X"]
+ *
+ * "event project meeting /from Mon 2pm /to Mon 4pm"
+ * // -> ["event", "project meeting", "Mon 2pm", "Mon 4pm", ""]
+ * }</pre>
+ */
 public class Parser {
     public static final ArrayList<String> keywordsList = new ArrayList<>();
 
