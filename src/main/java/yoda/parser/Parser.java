@@ -1,3 +1,5 @@
+package yoda.parser;
+
 public class Parser {
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists

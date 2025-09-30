@@ -1,3 +1,5 @@
+package yoda.task;
+
 import javax.naming.InsufficientResourcesException;
 
 public class Event extends Deadline {

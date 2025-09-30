@@ -1,14 +1,21 @@
+package yoda;
+
+import yoda.exception.TaskOutOfRangeException;
+import yoda.storage.Storage;
+import yoda.task.TaskList;
+import yoda.ui.Ui;
+
 import java.io.IOException;
-import java.nio.file.*;
 
 public class Yoda {
-    static TaskList inputList = new TaskList();
+    public static TaskList inputList = new TaskList();
 
     // main function that runs all other sub-functions
     public static void main(String[] args) {
         try {
             Storage userData = new Storage("data/user.txt");
             Ui.start(userData.isNewFile());
+            userData.fileToArray();
 
             Ui.run();
             userData.arrayToFile();
@@ -19,7 +26,7 @@ public class Yoda {
         } catch (NumberFormatException e) {
             Ui.showError("Number input is invalid! Try again.", e);
         } catch (TaskOutOfRangeException | IndexOutOfBoundsException e) {
-            Ui.showError("Task is out of range!\n" +
+            Ui.showError("yoda.task.Task is out of range!\n" +
                     "You have " + inputList.size() + " tasks.", e);
         } catch (Exception e) {
             Ui.showError("Something went wrong!", e);

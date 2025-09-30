@@ -1,3 +1,9 @@
+package yoda.storage;
+
+import yoda.parser.Parser;
+import yoda.Yoda;
+import yoda.task.Task;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -29,7 +35,7 @@ public class Storage {
     }
 
     // function extracts and processes all tasks to tasks array from file f
-    // returns a Task[] array, filled with extracted tasks
+    // returns a yoda.task.Task[] array, filled with extracted tasks
     public void fileToArray() throws FileNotFoundException {
         Scanner fileScanner = new Scanner(userFile);
 
@@ -45,8 +51,6 @@ public class Storage {
     public void arrayToFile() throws IOException {
         FileWriter fWrite = new FileWriter(userFile);
 
-        System.out.println(Yoda.inputList);
-        System.out.println(Yoda.inputList.getTasks());
         for (Task task : Yoda.inputList.getTasks()) {
             fWrite.write(task.toCommand());
             fWrite.write("\n");

@@ -1,7 +1,9 @@
+package yoda.task;
+
 import javax.naming.InsufficientResourcesException;
 
 /*
-        Task class
+        yoda.task.Task class
         Attributes: label, isDone
         methods: setMark, setLabel, toString
      */

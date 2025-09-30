@@ -1,3 +1,9 @@
+package yoda.ui;
+
+import yoda.parser.Parser;
+import yoda.exception.TaskOutOfRangeException;
+import yoda.Yoda;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -8,18 +14,18 @@ public class Ui {
         System.out.println("------------- YODA AWAKENS -------------");
 
         if (isNewFile){
-            System.out.println("Greetings youngling, Yoda is my name");
+            System.out.println("Greetings youngling, yoda.Yoda is my name");
         } else {
             System.out.println("Welcome back youngling! It is a pleasure to see you again");
         }
     }
 
     public static void ask() {
-        System.out.print("Yoda. Do or do not what shall I help you with? > ");
+        System.out.print("Do or do not what shall I help you with? > ");
     }
 
     // function to ask the user for an input
-    // modifies contents of Task list depending on user input
+    // modifies contents of yoda.task.Task list depending on user input
     public static void run() throws TaskOutOfRangeException {
         /* if "bye", loop terminates
          * if "list", shows previous inputs as a numbered list
