@@ -1,8 +1,6 @@
-import javax.naming.InsufficientResourcesException;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -11,7 +9,7 @@ public class Yoda {
     // CONSTANTS
     static final Scanner SCANNER = new Scanner(System.in); //  used for user input
 
-    static ArrayList<Task> inputList = new ArrayList<>();
+    static TaskList inputList = new TaskList();
 
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
@@ -48,92 +46,6 @@ public class Yoda {
         return finalArray;
     }
 
-    // function that takes in a task list and count
-    // prints out the list (if not empty)
-    // prints out a message (if empty)
-    public static void printTaskList(ArrayList<Task> taskList) {
-        if (taskList.isEmpty()) {
-            System.out.println("This list of yours looks empty...");
-        } else {
-            System.out.println("You have " + taskList.size() + " tasks:");
-            for (int i = 0; i < taskList.size(); i++) {
-                System.out.print((i + 1) + ". ");
-                System.out.println(taskList.get(i));
-            }
-        }
-    }
-
-    // function that marks a task in a task list, depending on index
-    // prints a success message if task is found
-    public static void markTaskList(ArrayList<Task> taskList, int index, boolean isMark) {
-        if (index < 0 | index >= taskList.size()) {
-            System.out.println("Funny. This ID matches no task of yours.");
-        } else {
-            Task newTask = taskList.get(index);
-            newTask.setMark(isMark);
-            taskList.set(index, newTask);
-        }
-    }
-
-    // function that adds a task to a task list
-    // prints either a success or error message
-    // returns the new value of count
-    private static void addTaskList(String[] keywordsArray, boolean show) {
-        try {
-            int lastIndex;
-            Task newTask;
-            if (keywordsArray[1].isEmpty()) {
-                throw new InsufficientResourcesException();
-            }
-            switch (keywordsArray[0]) {
-                case "todo":
-                    newTask = new Todo(keywordsArray[1]);
-                    lastIndex = 2;
-                    break;
-                case "deadline":
-                    newTask = new Deadline(keywordsArray[1], keywordsArray[2]);
-                    lastIndex = 3;
-                    break;
-                case "event":
-                    newTask = new Event(keywordsArray[1], keywordsArray[2], keywordsArray[3]);
-                    lastIndex = 4;
-                    break;
-                default:
-                    throw new InvalidCommandException(keywordsArray[0] + " is not a valid command...");
-            }
-            inputList.add(newTask);
-            if (show) {
-                // expected: entry through user input
-                System.out.println("Successfully added: ");
-                System.out.println(inputList.get(inputList.size() - 1));
-            } else {
-                // expected: entry through file input
-                if (keywordsArray[lastIndex].equals("X")) {
-                    newTask = inputList.get(inputList.size() - 1);
-                    newTask.setMarkSilent(true);
-                    inputList.set(inputList.size()-1, newTask);
-                }
-            }
-        } catch (InsufficientResourcesException e) {
-            System.out.print("SHEESHHH!! ");
-            System.out.println("Your command has not enough arguments!");
-            System.out.println("Your task was not added.");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("My condolences, it seems you have too much on your plate.");
-        } catch (InvalidCommandException e) {
-            System.out.println("Invalid command found.");
-            System.out.println("Error: " + e);
-            System.out.println("Line skipped.");
-        }
-    }
-
-    public static void deleteTaskList(ArrayList<Task> taskList, int index) throws TaskOutOfRangeException {
-        if (index < 0 || index >= taskList.size()) {
-            throw new TaskOutOfRangeException();
-        } else {
-            taskList.remove(index);
-        }
-    }
     // function to ask the user for an input
     // modifies contents of Task list depending on user input
     private static void ask() {
@@ -150,7 +62,7 @@ public class Yoda {
 
             switch (keywordsArray[0]) {
                 case "list":
-                    printTaskList(inputList);
+                    System.out.print(inputList);
                     break;
                 case "mark":
                 case "unmark":
@@ -160,7 +72,7 @@ public class Yoda {
                             throw new TaskOutOfRangeException();
                         }
                         boolean isMark = keywordsArray[0].equals("mark");
-                        markTaskList(inputList, itemId, isMark);
+                        inputList.mark(itemId, isMark);
                     } catch (NumberFormatException e) {
                         System.out.println("Input is invalid! Try to mark/unmark again.");
                     } catch (TaskOutOfRangeException e) {
@@ -171,7 +83,7 @@ public class Yoda {
                 case "todo":
                 case "deadline":
                 case "event":
-                    addTaskList(keywordsArray, true);
+                    inputList.add(keywordsArray, true);
                     break;
                 case "delete":
                     try {
@@ -184,7 +96,7 @@ public class Yoda {
                         userInput = SCANNER.nextLine();
 
                         if (userInput.equals("Y")) {
-                            deleteTaskList(inputList, itemId);
+                            inputList.delete(itemId);
                             System.out.println("Successfully deleted!");
                         } else {
                             System.out.println("Delete command aborted...");
@@ -216,7 +128,7 @@ public class Yoda {
             String fileInput = fileScanner.nextLine();
             String[] keywordsArray = splitInput(fileInput);
 
-            addTaskList(keywordsArray, false);
+            inputList.add(keywordsArray, false);
         }
     }
 
@@ -224,7 +136,7 @@ public class Yoda {
     private static void arrayToFile(File f) throws IOException {
         FileWriter fWrite = new FileWriter(f);
 
-        for (Task task : inputList) {
+        for (Task task : inputList.getTasks()) {
             fWrite.write(task.toCommand());
             fWrite.write("\n");
         }
