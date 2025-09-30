@@ -6,6 +6,9 @@ import yoda.exception.TaskOutOfRangeException;
 import javax.naming.InsufficientResourcesException;
 import java.util.ArrayList;
 
+import static yoda.Yoda.inputList;
+import static yoda.parser.Parser.keywordsList;
+
 public class TaskList {
     private final ArrayList<Task> List;
 
@@ -49,28 +52,28 @@ public class TaskList {
     // function that adds a task to a task list
     // prints either a success or error message
     // returns the new value of count
-    public void add(String[] keywordsArray, boolean show) {
+    public void add(boolean show) {
         try {
             int lastIndex;
             Task newTask;
-            if (keywordsArray[1].isEmpty()) {
+            if (keywordsList.get(1).isEmpty()) {
                 throw new InsufficientResourcesException();
             }
-            switch (keywordsArray[0]) {
+            switch (keywordsList.get(0)) {
                 case "todo":
-                    newTask = new Todo(keywordsArray[1]);
+                    newTask = new Todo(keywordsList.get(1));
                     lastIndex = 2;
                     break;
                 case "deadline":
-                    newTask = new Deadline(keywordsArray[1], keywordsArray[2]);
+                    newTask = new Deadline(keywordsList.get(1), keywordsList.get(2));
                     lastIndex = 3;
                     break;
                 case "event":
-                    newTask = new Event(keywordsArray[1], keywordsArray[2], keywordsArray[3]);
+                    newTask = new Event(keywordsList.get(1), keywordsList.get(2), keywordsList.get(3));
                     lastIndex = 4;
                     break;
                 default:
-                    throw new InvalidCommandException(keywordsArray[0] + " is not a valid command...");
+                    throw new InvalidCommandException(keywordsList.get(0) + " is not a valid command...");
             }
             List.add(newTask);
             if (show) {
@@ -79,7 +82,7 @@ public class TaskList {
                 System.out.println(List.get(List.size() - 1));
             } else {
                 // expected: entry through file input
-                if (keywordsArray[lastIndex].equals("X")) {
+                if (keywordsList.get(lastIndex).equals("X")) {
                     newTask = List.get(List.size() - 1);
                     newTask.setMarkSilent(true);
                     List.set(List.size()-1, newTask);
@@ -121,5 +124,17 @@ public class TaskList {
         }
     }
 
+    // takes String and uses it to filter. Returns list of tasks based on filter string.
+    public static ArrayList<Task> filterTasks(String filter) {
+        ArrayList<Task> filteredList = new ArrayList<>();
+
+        for (Task task : inputList.getTasks()) {
+            if (String.valueOf(task).contains(filter)) {
+                filteredList.add(task);
+            }
+        }
+
+        return filteredList;
+    }
 
 }

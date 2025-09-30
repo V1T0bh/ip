@@ -41,9 +41,9 @@ public class Storage {
 
         while (fileScanner.hasNext()) {
             String fileInput = fileScanner.nextLine();
-            String[] keywordsArray = Parser.split(fileInput);
+            Parser.split(fileInput);
 
-            Yoda.inputList.add(keywordsArray, false);
+            Yoda.inputList.add(false);
         }
     }
 
