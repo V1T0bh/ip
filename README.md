@@ -1,4 +1,4 @@
-Meet Yoda.
+Meet yoda.Yoda.
 He will guide you in your CS2113 journey.
 
 

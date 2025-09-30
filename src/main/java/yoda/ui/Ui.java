@@ -6,6 +6,8 @@ import yoda.Yoda;
 
 import java.util.Scanner;
 
+import static yoda.parser.Parser.keywordsList;
+
 public class Ui {
     static final Scanner SCANNER = new Scanner(System.in); //  used for user input
 
@@ -39,32 +41,31 @@ public class Ui {
 
         String userInput = SCANNER.nextLine();
         while (!userInput.equals("bye")) {
-            String[] keywordsArray = Parser.split(userInput);
+            Parser.split(userInput);
 
-            switch (keywordsArray[0]) {
+            switch (keywordsList.get(0)) {
                 case "list":
                     System.out.print(Yoda.inputList);
                     break;
                 case "mark":
                 case "unmark":
-                    itemId = Integer.parseInt(keywordsArray[1]) - 1;
+                    itemId = Integer.parseInt(keywordsList.get(1)) - 1;
                     if (itemId >= Yoda.inputList.size()) {
                         throw new TaskOutOfRangeException();
                     }
-                    boolean isMark = keywordsArray[0].equals("mark");
+                    boolean isMark = keywordsList.get(0).equals("mark");
                     Yoda.inputList.mark(itemId, isMark);
                     break;
                 case "todo":
                 case "deadline":
                 case "event":
-                    Yoda.inputList.add(keywordsArray, true);
+                    Yoda.inputList.add(true);
                     break;
                 case "delete":
-                    itemId = Integer.parseInt(keywordsArray[1]) - 1;
-                    String TaskCache = String.valueOf(Yoda.inputList.get(itemId));
+                    itemId = Integer.parseInt(keywordsList.get(1)) - 1;
                     // confirmation message
                     System.out.println("This task will be PERMANENTLY deleted:");
-                    System.out.println(TaskCache);
+                    System.out.println(Yoda.inputList.get(itemId));
                     System.out.print("Are you sure? (Y/n) > ");
                     userInput = SCANNER.nextLine();
 
