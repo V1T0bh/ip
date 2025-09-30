@@ -13,17 +13,38 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+/**
+ * Handles persistence of tasks to and from the file system.
+ * <p>
+ * The {@code Storage} class ensures the data file and its parent directories exist.
+ * It loads the tasks from the save file into {@link yoda.task.TaskList}.
+ * Finally, it will write tasks back to the file in a command-like format.
+ * </p>
+ */
 public class Storage {
     private final File userFile;
     private final boolean isNew;
 
-    // returns whether a file was created
-    // true, if new file
-    // false, otherwise
+    /**
+     * Returns whether the underlying file was created for the first time.
+     *
+     * @return {@code true} if the file did not previously exist and was created;
+     *         {@code false} if the file already existed.
+     */
     public boolean isNewFile() {
         return isNew;
     }
 
+    /**
+     * Constructs a {@code Storage} instance pointing to the given path.
+     * <p>
+     * If necessary, parent directories are created automatically. If the file
+     * does not exist, it will be created.
+     * </p>
+     *
+     * @param path the path to the file used for persistence (e.g. {@code data/user.txt}).
+     * @throws IOException if directories or file cannot be created.
+     */
     public Storage(String path) throws IOException {
         // creates dir based on path if it does not exist
         // does nothing if it exists
@@ -34,8 +55,16 @@ public class Storage {
         isNew = userFile.createNewFile();
     }
 
-    // function extracts and processes all tasks to tasks array from file f
-    // returns a yoda.task.Task[] array, filled with extracted tasks
+    /**
+     * Loads tasks from the file into {@link Yoda#inputList}.
+     * <p>
+     * Each line of the file is parsed into keywords via {@link Parser#split(String)},
+     * and then delegated to {@link yoda.task.TaskList#add(boolean)} with
+     * {@code show = false} to add silently.
+     * </p>
+     *
+     * @throws FileNotFoundException if the underlying file cannot be read.
+     */
     public void fileToArray() throws FileNotFoundException {
         Scanner fileScanner = new Scanner(userFile);
 
@@ -47,7 +76,15 @@ public class Storage {
         }
     }
 
-    // function uses task array and writes it to file f
+    /**
+     * Writes all tasks from {@link Yoda#inputList} into the file.
+     * <p>
+     * Each task is converted to a command string via {@link Task#toCommand()} and
+     * written as a separate line.
+     * </p>
+     *
+     * @throws IOException if the file cannot be opened or written to.
+     */
     public void arrayToFile() throws IOException {
         FileWriter fWrite = new FileWriter(userFile);
 

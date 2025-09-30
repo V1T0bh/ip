@@ -9,32 +9,68 @@ import java.util.ArrayList;
 import static yoda.Yoda.inputList;
 import static yoda.parser.Parser.keywordsList;
 
+/**
+ * Represents the list of tasks during the execution of the Yoda application.
+ * <p>
+ * A {@code TaskList} utilizes an {@link ArrayList} of {@link Task} objects and
+ * provides operations for adding, deleting, marking, listing, and filtering tasks.
+ * </p>
+ *
+ * <h2>Usage</h2>
+ * <p>
+ * A {@code TaskList} is typically created at startup and populated
+ * either from persistent storage or user commands.
+ * </p>
+ */
 public class TaskList {
     private final ArrayList<Task> List;
 
+    /**
+     * Constructs an empty {@code TaskList}.
+     */
     public TaskList() {
         List = new ArrayList<>();
     }
 
-    // returns the Array List of tasks
+    /**
+     * Returns the underlying list of tasks.
+     *
+     * @return the backing {@link ArrayList}.
+     */
     public ArrayList<Task> getTasks() {
         return List;
     }
 
-    // takes an index and returns the task in that index
+    /**
+     * Returns the task at the specified index.
+     *
+     * @param index the zero-based index.
+     * @return the task at the given index.
+     * @throws IndexOutOfBoundsException if the index is invalid.
+     */
     public Task get(int index){
         return List.get(index);
     }
 
-    // returns the size of List
+    /**
+     * Returns the number of tasks in this list.
+     *
+     * @return the size of the list.
+     */
     public int size() {
         return List.size();
     }
 
+    /**
+     * Returns a string representation of this task list.
+     * <p>
+     * If the list is empty, a message is returned.
+     * Otherwise, a numbered listing of all tasks is returned.
+     * </p>
+     *
+     * @return a human-readable string of all tasks.
+     */
     @Override
-    // function returns a string:
-    // returns the list (if not empty)
-    // returns a message (if empty)
     public String toString() {
         StringBuilder out = new StringBuilder();
         if (List.isEmpty()) {
@@ -49,9 +85,18 @@ public class TaskList {
         return out.toString();
     }
 
-    // function that adds a task to a task list
-    // prints either a success or error message
-    // returns the new value of count
+    /**
+     * Adds a new task to this list based on the current contents of {@link yoda.parser.Parser#keywordsList}.
+     * <p>
+     * This method supports both:
+     * </p>
+     * <ul>
+     *   <li>User-driven additions (with success messages when {@code show = true}).</li>
+     *   <li>File-driven additions (silent, with mark status restored when {@code show = false}).</li>
+     * </ul>
+     *
+     * @param show whether to print user-facing success messages.
+     */
     public void add(boolean show) {
         try {
             int lastIndex;
@@ -101,9 +146,12 @@ public class TaskList {
         }
     };
 
-    // function that removes a task from a task list based on given index
-    // if task exists, task is removed
-    // if task does not exist, throws an error
+    /**
+     * Removes a task at the specified index.
+     *
+     * @param index the zero-based index.
+     * @throws TaskOutOfRangeException if the index is invalid.
+     */
     public void delete(int index) throws TaskOutOfRangeException {
         if (index < 0 || index >= List.size()) {
             throw new TaskOutOfRangeException();
@@ -112,8 +160,15 @@ public class TaskList {
         }
     }
 
-    // function that marks a task in a task list, depending on index
-    // prints a success message if task is found
+    /**
+     * Marks or unmarks a task at the specified index.
+     * <p>
+     * If the index is invalid, a message is printed instead of throwing an exception.
+     * </p>
+     *
+     * @param index  the zero-based index of the task.
+     * @param isMark {@code true} to mark as done, {@code false} to unmark.
+     */
     public void mark(int index, boolean isMark) {
         if (index < 0 | index >= List.size()) {
             System.out.println("Funny. This ID matches no task of yours.");
@@ -124,7 +179,15 @@ public class TaskList {
         }
     }
 
-    // takes String and uses it to filter. Returns list of tasks based on filter string.
+    /**
+     * Returns a filtered list of tasks whose string representation contains the given filter text.
+     * <p>
+     * This method operates on the global {@link yoda.Yoda#inputList}.
+     * </p>
+     *
+     * @param filter the substring to search for in task descriptions.
+     * @return a new list of tasks matching the filter.
+     */
     public static ArrayList<Task> filterTasks(String filter) {
         ArrayList<Task> filteredList = new ArrayList<>();
 
