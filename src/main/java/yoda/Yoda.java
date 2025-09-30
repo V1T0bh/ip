@@ -1,6 +1,5 @@
 package yoda;
 
-import yoda.exception.TaskOutOfRangeException;
 import yoda.storage.Storage;
 import yoda.task.TaskList;
 import yoda.ui.Ui;
@@ -23,13 +22,6 @@ public class Yoda {
             Ui.end();
         } catch (IOException e) {
             Ui.showError("There were issues with the file.", e);
-        } catch (NumberFormatException e) {
-            Ui.showError("Number input is invalid! Try again.", e);
-        } catch (TaskOutOfRangeException | IndexOutOfBoundsException e) {
-            Ui.showError("yoda.task.Task is out of range!\n" +
-                    "You have " + inputList.size() + " tasks.", e);
-        } catch (Exception e) {
-            Ui.showError("Something went wrong!", e);
         }
     }
 }

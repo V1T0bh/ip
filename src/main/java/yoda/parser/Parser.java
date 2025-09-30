@@ -19,6 +19,8 @@ public class Parser {
     // function to split the input to array
     // [TASK TYPE, TASK LABEL, TASK START, TASK END], if exists
     public static void split(String userInput) {
+        keywordsList.clear();
+
         final int NO_OF_KEYWORDS = 5;
         String[] splitArray = userInput.split(" ");
 
