@@ -34,8 +34,9 @@ With Yoda, managing tasks is as fun as learning from the Jedi Master himself.
 
 ## 🚀 Quick Start
 
-1. Ensure you have **Java 17** or above installed in your computer.
-Mac users: Ensure you have the precise JDK version prescribed here.
+1. Ensure you have Java 17 or above installed in your computer.\
+   **Mac users**: Ensure you have the precise JDK version prescribed
+   [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
 
 2. Download the latest `Yoda.jar`.
