@@ -34,13 +34,21 @@ With Yoda, managing tasks is as fun as learning from the Jedi Master himself.
 
 ## 🚀 Quick Start
 
-1. **Run the program**
+1. Ensure you have **Java 17** or above installed in your computer.
+Mac users: Ensure you have the precise JDK version prescribed here.
+
+
+2. Download the latest `Yoda.jar`.
+Open a terminal in the folder containing the JAR.
+
+
+3. **Run the program**
    ```
    java -jar Yoda.jar
    ```
 
 
-2. **Yoda greets you**
+4. **Yoda greets you**
    ```
    ----------------------------------------------
     ___  _ ____  ____  ____ 
@@ -52,7 +60,7 @@ With Yoda, managing tasks is as fun as learning from the Jedi Master himself.
     ------------------- AWAKENS ------------------
    ```
 
-3. **Start talking to your new friend**:
+5. **Start talking to your new friend**:
    ```
    Do or do not what shall I help you with? >
    ```
